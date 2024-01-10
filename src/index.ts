@@ -1,13 +1,14 @@
-import express from 'express';
+import "dotenv/config";
+import mongoose from "mongoose";
+import app from "./app";
 
-const app = express()
+const mongoURL = process.env.DB_URL;
 
-app.use('/', (request, response) => {
-    console.log('Root route hit')
+if (!mongoURL) throw Error("Missing db url");
 
-    response.send("Hello, class!")
-})
-
-app.listen(3000, () => {
-    console.log('Server listening on port 3000')
-})
+mongoose.connect(mongoURL).then(() => {
+  const port = parseInt(process.env.PORT || "3000");
+  app.listen(port, () => {
+    console.log("Server listening on port " + port);
+  });
+});
